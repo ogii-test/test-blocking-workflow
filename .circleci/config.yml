@@ -1,0 +1,157 @@
+listA: &listA
+  pool: [
+    "something"
+  ]
+
+listB: &listB
+  app: [
+    "a",
+    "b",
+    "c",
+    "d"
+  ]
+
+circle_class: &circle_class
+  resource_class: small
+
+executors:
+  default:
+    working_directory: ~/job
+    docker:
+      - image: cimg/base:stable
+        auth:
+          username: $DOCKER_HUB_USERNAME
+          password: $DOCKER_HUB_PASSWORD
+
+workflows:
+  commit-workflow:
+    jobs:
+      - nothing-job:
+          matrix:
+            alias: "nothing-a"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-a"
+          matrix:
+            alias: "nothing-b"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-b"
+          matrix:
+            alias: "nothing-c"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-c"
+          matrix:
+            alias: "nothing-d"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-d"
+          matrix:
+            alias: "nothing-e"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-e"
+          matrix:
+            alias: "nothing-1"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-e"
+          matrix:
+            alias: "nothing-2"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-e"
+          matrix:
+            alias: "nothing-3"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-e"
+          matrix:
+            alias: "nothing-4"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-e"
+          matrix:
+            alias: "nothing-5"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-e"
+          matrix:
+            alias: "nothing-6"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-e"
+          matrix:
+            alias: "nothing-7"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - "nothing-e"
+          matrix:
+            alias: "nothing-8"
+            parameters:
+              <<: *listB
+              <<: *listA
+      - nothing-job:
+          requires:
+            - nothing-1
+            - nothing-2
+            - nothing-3
+            - nothing-4
+            - nothing-5
+            - nothing-6
+            - nothing-7
+            - nothing-8
+          matrix:
+            alias: "nothing-9"
+            parameters:
+              <<: *listB
+              <<: *listA
+
+jobs:
+  nothing-job:
+    executor: default
+    <<: *circle_class
+    parameters:
+      app:
+        type: string
+      pool:
+        type: string
+    steps:
+      - run: echo "test"
